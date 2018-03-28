@@ -4,9 +4,9 @@ from pyMiniJass.player.base_player import BasePlayer
 
 
 class RandomPlayer(BasePlayer):
-    def choose_card(self, state=None):
-        if state:
-            first_card = state[-1]['played_cards'][0].card
+    def choose_card(self, table=None):
+        if table:
+            first_card = table[0].card
         else:
             first_card = None
         cards = self.allowed_cards(first_card=first_card)

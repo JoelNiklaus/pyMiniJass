@@ -1,6 +1,5 @@
 import logging
 import random
-from operator import attrgetter
 from collections import namedtuple
 
 from pyMiniJass.dealer import Dealer
@@ -19,6 +18,7 @@ class Game:
         self.players = players
         self.team1 = [players[0], players[2]]
         self.team2 = [players[1], players[3]]
+        self.table = []
 
     def play(self):
         dealer = Dealer(players=self.players)
@@ -27,7 +27,9 @@ class Game:
 
         start_player_index = random.randint(0, 3)
         for i in range(4):
+            self.table = []
             stich = self.play_stich(start_player_index)
+            self.stich_over(stich)
             self.stiche.append(stich)
             start_player_index = self.players.index(stich['stich'].player)
         points_team1 = sum(player.points for player in self.team1)
@@ -54,7 +56,7 @@ class Game:
 
     def play_card(self, first_card, player):
         is_allowed_card = False
-        generator = player.choose_card(state=self.get_status())
+        generator = player.choose_card(table=self.table)
         chosen_card = next(generator)
         while not is_allowed_card:
             is_allowed_card = card_allowed(first_card=first_card, chosen_card=chosen_card, hand_cards=player.cards)
@@ -63,10 +65,12 @@ class Game:
         else:
             logger.info('Table: {0}:{1}'.format(player, chosen_card))
             player.cards.remove(chosen_card)
+        self.table.append(PlayedCard(player=player, card=chosen_card))
         return chosen_card
 
-    def get_status(self):
-        return self.stiche
+    def stich_over(self, stich):
+        for player in self.players:
+            player.stich_over(stich=stich)
 
 
 def get_player_index(start_index):

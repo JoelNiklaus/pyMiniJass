@@ -16,10 +16,10 @@ class BasePlayer:
     def set_card(self, card):
         self.cards.append(card)
 
-    def choose_card(self, state=None):
+    def choose_card(self, table=None):
         raise NotImplementedError(str(inspect.stack()[1][3]))
 
-    def stich_over(self, state=None):
+    def stich_over(self, stich=None):
         pass
 
     def allowed_cards(self, first_card):
