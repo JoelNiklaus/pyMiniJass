@@ -21,6 +21,7 @@ class Game:
         self.table = []
 
     def play(self):
+        self.reset_players()
         dealer = Dealer(players=self.players)
         dealer.shuffle_cards()
         dealer.deal_cards()
@@ -77,6 +78,10 @@ class Game:
 
     def get_points_team2(self):
         return get_team_points(self.team2)
+
+    def reset_players(self):
+        for player in self.players:
+            player.points = 0
 
 
 def get_team_points(team):
