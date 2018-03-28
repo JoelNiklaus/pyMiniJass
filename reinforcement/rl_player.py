@@ -28,6 +28,7 @@ class RlPlayer(BasePlayer):
         self.callbacks = [ReduceLROnPlateau(monitor='loss', factor=0.2, patience=5, min_lr=0.01)]
         self.won = 0
         self.lost = 0
+        self.remis = 0
         self.current_memory = dict(used=False)
         self.previous_memory = dict(used=False)
         self.team_points = [0, 0]
