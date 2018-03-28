@@ -15,7 +15,9 @@ def get_highest(played_cards):
     return highest_card
 
 
-def is_card_allowed(first_card, hand_cards, chosen_card):
+def card_allowed(first_card, hand_cards, chosen_card):
+    if first_card is None:
+        return True
     if chosen_card.suit == first_card.suit:
         return True
     for card in hand_cards:
@@ -27,6 +29,6 @@ def is_card_allowed(first_card, hand_cards, chosen_card):
 def allowed_cards(first_card, hand_cards):
     allowed = []
     for card in hand_cards:
-        if is_card_allowed(first_card, hand_cards, card):
+        if card_allowed(first_card, hand_cards, card):
             allowed.append(card)
     return allowed

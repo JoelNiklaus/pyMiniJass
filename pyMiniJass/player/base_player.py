@@ -8,6 +8,7 @@ class BasePlayer:
         self.name = name
         self.cards = []
         self.id = None
+        self.points = 0
 
     def get_dict(self):
         return dict(name=self.name, type=type(self).__name__)
