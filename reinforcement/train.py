@@ -3,24 +3,25 @@ import os
 
 import matplotlib.pyplot as plt
 
-from pyschieber.tournament import Tournament
-
-from schieberjassbot.rose.rose_rl_player import RoseRlPlayer
-from schieberjassbot.rose.rose_random_player import RoseRandomPlayer
+from pyMiniJass.game import Game
+from pyMiniJass.player.random_player import RandomPlayer
+from reinforcement.rl_player import RlPlayer
 
 
 def run(log_dir, episodes, rounds, save_plot):
     model_path_1 = log_dir + '/rl1_model_rose.h5'
     model_path_2 = log_dir + '/rl2_model_rose.h5'
-    rl_player_1 = RoseRlPlayer(name='RL1', model_path=model_path_1, rounds=rounds)
-    rl_player_2 = RoseRlPlayer(name='RL2', model_path=model_path_2, rounds=rounds)
-    players = [rl_player_1, RoseRandomPlayer(name='Tick'), rl_player_2, RoseRandomPlayer(name='Track')]
+    rl_player_1 = RlPlayer(name='RL1', model_path=model_path_1, rounds=rounds)
+    rl_player_2 = RlPlayer(name='RL2', model_path=model_path_2, rounds=rounds)
+    players = [rl_player_1, RandomPlayer(name='Tick'), rl_player_2, RandomPlayer(name='Track')]
+    for i in range(len(players)):
+        players[i].id = i
     won1 = []
     won2 = []
     for e in range(episodes):
-        tournament = Tournament()
-        [tournament.register_player(player) for player in players]
-        tournament.play(rounds=rounds)
+        for _ in range(rounds):
+            game = Game(players=players)
+            game.play()
         rl_player_1.replay()
         rl_player_2.replay()
         print_stats(rl_player_1.won, rl_player_1.lost)
@@ -67,7 +68,7 @@ def plot_stats(won1, won2, save_plot, log_dir):
 
 if __name__ == "__main__":
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    parser = argparse.ArgumentParser(description='SchieberJassBot', )
+    parser = argparse.ArgumentParser(description='pyMiniJassBot', )
     parser.add_argument('-l', '--log_dir', dest='log_dir', help='Tensorboard log directory')
     parser.add_argument('-e', '--nr_episodes', dest='nr_episodes', help='Number of episodes to play', type=int)
     parser.add_argument('-r', '--rounds', dest='rounds', help='Game rounds', type=int)

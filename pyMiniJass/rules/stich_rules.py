@@ -16,6 +16,8 @@ def get_highest(played_cards):
 
 
 def card_allowed(first_card, hand_cards, chosen_card):
+    if chosen_card not in hand_cards:
+        return False
     if first_card is None:
         return True
     if chosen_card.suit == first_card.suit:

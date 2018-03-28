@@ -32,8 +32,8 @@ class Game:
             self.stich_over(stich)
             self.stiche.append(stich)
             start_player_index = self.players.index(stich['stich'].player)
-        points_team1 = sum(player.points for player in self.team1)
-        points_team2 = sum(player.points for player in self.team2)
+        points_team1 = self.get_points_team1()
+        points_team2 = self.get_points_team2()
         logger.info('Points Team 1: {0}'.format(points_team1))
         logger.info('Points Team 2: {0}'.format(points_team2))
         if points_team1 == points_team2:
@@ -51,7 +51,7 @@ class Game:
             cards_on_table.append(PlayedCard(player=current_player, card=card))
         played_card_stich = stich_rule(played_cards=cards_on_table)
         played_card_stich.player.points += count_stich(played_cards=cards_on_table)
-        stich = dict(stich=played_card_stich, played_cards=cards_on_table)
+        stich = dict(stich=played_card_stich, played_cards=cards_on_table, teams=[self.team1, self.team2])
         return stich
 
     def play_card(self, first_card, player):
@@ -71,6 +71,16 @@ class Game:
     def stich_over(self, stich):
         for player in self.players:
             player.stich_over(stich=stich)
+
+    def get_points_team1(self):
+        return get_team_points(self.team1)
+
+    def get_points_team2(self):
+        return get_team_points(self.team2)
+
+
+def get_team_points(team):
+    return sum(player.points for player in team)
 
 
 def get_player_index(start_index):

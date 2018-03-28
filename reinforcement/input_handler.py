@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-from pyschieber.deck import Deck
+from pyMiniJass.deck import Deck
 
 '''
 |                               played cards
