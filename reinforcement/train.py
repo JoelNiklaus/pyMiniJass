@@ -9,8 +9,8 @@ from reinforcement.rl_player import RlPlayer
 
 
 def run(log_dir, episodes, rounds, save_plot):
-    model_path_1 = log_dir + '/rl1_model_rose.h5'
-    model_path_2 = log_dir + '/rl2_model_rose.h5'
+    model_path_1 = log_dir + '/rl1_model_mini.h5'
+    model_path_2 = log_dir + '/rl2_model_mini.h5'
     rl_player_1 = RlPlayer(name='RL1', model_path=model_path_1, rounds=rounds)
     rl_player_2 = RlPlayer(name='RL2', model_path=model_path_2, rounds=rounds)
     players = [rl_player_1, RandomPlayer(name='Tick'), rl_player_2, RandomPlayer(name='Track')]

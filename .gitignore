@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Model weight files
+*.h5
+
 # Distribution / packaging
 .Python
 env/
