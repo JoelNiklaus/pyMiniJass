@@ -31,7 +31,7 @@ class RlPlayer(BasePlayer):
         self.remis = 0
         self.current_memory = dict(used=False)
         self.previous_memory = dict(used=False)
-        self.team_points = [0, 0]
+        self.winning = [0, 0, 0, 0]
 
     def remember(self, state, action, reward, next_state, done):
         self.memories.append((state, action, reward, next_state, done))
@@ -88,7 +88,7 @@ class RlPlayer(BasePlayer):
             else:
                 index += 1
                 self.current_memory['penalty'] = -0.1
-                logger.info('not allowed card!')
+                # logger.info('not allowed card!')
 
     def save_state(self, done):
         if self.previous_memory['used']:
@@ -98,7 +98,7 @@ class RlPlayer(BasePlayer):
 
         self.previous_memory = self.current_memory.copy()
         if done:
-            #print_state(self.previous_memory['state'])
+            # print_state(self.previous_memory['state'])
             self.remember(state=self.previous_memory['state'], action=self.previous_memory['action'],
                           reward=self.previous_memory['reward'], done=self.previous_memory['done'],
                           next_state=None)
@@ -117,19 +117,21 @@ class RlPlayer(BasePlayer):
     def calculate_reward(self, teams, done):
         if not done:
             return 0.
-        points_team_1 = get_team_points(teams[0])
-        points_team_2 = get_team_points(teams[1])
-        if points_team_1 > points_team_2:
-            self.won += 1
+        points = []
+        points.append(teams[0][0].points)
+        points.append(teams[1][0].points)
+        points.append(teams[0][1].points)
+        points.append(teams[1][1].points)
+        winner = max(points)
+        winner_index = points.index(winner)
+        self.winning[winner_index] += 1
+        if winner_index == 0:
             return 1.
-        elif points_team_1 < points_team_2:
-            self.lost += 1
-            return -1.
         else:
-            self.remis += 1
-            return 0.5
+            return -1.
 
     def reset_stats(self):
-        self.won = 0
-        self.lost = 0
-        self.remis = 0
+        self.winning = [0, 0, 0, 0]
+        # self.won = 0
+        # self.lost = 0
+        # self.remis = 0

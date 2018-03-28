@@ -16,10 +16,8 @@ def start_tournament():
     rl_player_1 = RlPlayer(name='RL1', model_path=model_path_1)
     rl_player_2 = RlPlayer(name='RL2', model_path=model_path_2)
     cli_player = CliPlayer(name='Yourself')
-    greedy_player = GreedyPlayer(name='Yourself')
+    greedy_player = GreedyPlayer(name='Greedy')
     players = [rl_player_1, cli_player, rl_player_2, greedy_player]
-    for i in range(len(players)):
-        players[i].id = i
     game = Game(players=players)
     game.play()
 

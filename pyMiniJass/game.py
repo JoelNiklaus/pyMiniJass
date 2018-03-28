@@ -19,6 +19,11 @@ class Game:
         self.team1 = [players[0], players[2]]
         self.team2 = [players[1], players[3]]
         self.table = []
+        self.set_player_ids()
+
+    def set_player_ids(self):
+        for i in range(len(self.players)):
+            self.players[i].id = i
 
     def play(self):
         self.reset_players()
@@ -28,6 +33,7 @@ class Game:
 
         start_player_index = random.randint(0, 3)
         for i in range(4):
+            logger.info('\nStich: {0} {1}\n'.format(i, '-' * 180))
             self.table = []
             stich = self.play_stich(start_player_index)
             self.stich_over(stich)
