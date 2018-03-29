@@ -1,12 +1,12 @@
 from pyMiniJass.game import Game, get_team_points
 from pyMiniJass.player.good_player import GoodPlayer
-from pyMiniJass.player.random_player import RandomPlayer
+from pyMiniJass.player.greedy_player import GreedyPlayer
 
 
 def test_greedy_player():
     rounds = 100
-    players = [GoodPlayer(name='GreedyPlayer1'), RandomPlayer(name='Tick'), GoodPlayer(name='GoodPlayer2'),
-               RandomPlayer(name='Track')]
+    players = [GoodPlayer(name='GreedyPlayer1'), GreedyPlayer(name='Tick'), GoodPlayer(name='GoodPlayer2'),
+               GreedyPlayer(name='Track')]
     won = 0
     lost = 0
     remis = 0
