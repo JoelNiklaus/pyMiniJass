@@ -1,0 +1,3 @@
+[
+  "tests/player/test_good_player.py::test_greedy_player"
+]
