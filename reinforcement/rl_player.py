@@ -31,6 +31,7 @@ class RlPlayer(BasePlayer):
         self.remis = 0
         self.current_memory = dict(used=False)
         self.previous_memory = dict(used=False)
+        self.previous_points = 0
         self.winning = [0, 0, 0, 0]
 
     def remember(self, state, action, reward, next_state, done):
@@ -76,16 +77,16 @@ class RlPlayer(BasePlayer):
         allowed = False
         self.input_handler.update_state_choose_card(table=table, cards=self.cards)
         predictions, prediction_indexes = self.act(self.input_handler.state)
-        self.current_memory['action'] = prediction_indexes[0]
         index = 0
         while not allowed:
             card = index_to_card(prediction_indexes[index])
             allowed = yield card
             if allowed:
+                self.current_memory['action'] = prediction_indexes[index]
                 yield None
             else:
                 index += 1
-                self.current_memory['penalty'] = -0.1
+                #self.current_memory['penalty'] = -0.1
                 # logger.info('not allowed card!')
 
     def save_state(self, done):
@@ -96,7 +97,8 @@ class RlPlayer(BasePlayer):
 
         self.previous_memory = self.current_memory.copy()
         if done:
-            #print_state(self.previous_memory['state'])
+            # print_state(self.previous_memory['state'])
+            self.previous_points = 0
             self.remember(state=self.previous_memory['state'], action=self.previous_memory['action'],
                           reward=self.previous_memory['reward'], done=self.previous_memory['done'],
                           next_state=None)
@@ -113,19 +115,19 @@ class RlPlayer(BasePlayer):
         self.input_handler.update_state_stich_over(stich)
 
     def calculate_reward(self, teams, done):
-        if not done:
-            return 0.
         points = [teams[0][0].points, teams[1][0].points, teams[0][1].points, teams[1][1].points]
         winner = max(points)
         winner_index = points.index(winner)
         self.winning[winner_index] += 1
-        if winner_index == 0:
-            return 1.
-        else:
-            return -1.
+        gain = teams[0][0].points - self.previous_points
+        self.previous_points = teams[0][0].points
+        return self.normalize_points(gain)
 
     def reset_stats(self):
         self.winning = [0, 0, 0, 0]
         # self.won = 0
         # self.lost = 0
         # self.remis = 0
+
+    def normalize_points(self, points):
+        return (points - 0) / (30 - 0)

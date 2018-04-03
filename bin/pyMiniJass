@@ -4,7 +4,7 @@ import sys, signal, argparse, logging
 
 from pyMiniJass.game import Game
 from pyMiniJass.player.cli_player import CliPlayer
-from pyMiniJass.player.greedy_player import GreedyPlayer
+from pyMiniJass.player.random_player import RandomPlayer
 from reinforcement.rl_player import RlPlayer
 
 
@@ -12,12 +12,11 @@ def start_tournament():
     dir_path = os.path.dirname(os.path.realpath(__file__))
     parent_dir = os.path.abspath(os.path.join(dir_path, os.pardir))
     model_path_1 = parent_dir + '/reinforcement/weights/rl1_model_mini.h5'
-    model_path_2 = parent_dir + '/reinforcement/weights/rl2_model_mini.h5'
     rl_player_1 = RlPlayer(name='RL1', model_path=model_path_1)
-    rl_player_2 = RlPlayer(name='RL2', model_path=model_path_2)
+    tick = RandomPlayer(name='Tick')
+    track = RandomPlayer(name='Track')
     cli_player = CliPlayer(name='Yourself')
-    greedy_player = GreedyPlayer(name='Greedy')
-    players = [rl_player_1, cli_player, rl_player_2, greedy_player]
+    players = [rl_player_1, cli_player, tick, track]
     game = Game(players=players)
     game.play()
 
