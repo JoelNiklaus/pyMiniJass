@@ -7,8 +7,8 @@ from keras.callbacks import ReduceLROnPlateau
 
 from pyMiniJass.game import get_team_points
 from pyMiniJass.player.base_player import BasePlayer
-from reinforcement.input_handler import InputHandler, index_to_card, get_state_image, print_state
-from reinforcement.model import build_cnn_model
+from reinforcement.input_handler import InputHandler, index_to_card, print_state
+from reinforcement.model import build_model
 
 logger = logging.getLogger(__name__)
 
@@ -19,8 +19,8 @@ class RlPlayer(BasePlayer):
         self.input_handler = InputHandler()
         self.n_samples = 20 * rounds
         self.memories = deque([], maxlen=2 * self.n_samples)
-        self.model = build_cnn_model(model_path=model_path)
-        self.model_t = build_cnn_model(model_path=model_path)
+        self.model = build_model(model_path=model_path)
+        self.model_t = build_model(model_path=model_path)
         self.loss = []
         self.epsilon = 0.95  # exploration rate
         self.penalty = 0.
@@ -41,15 +41,13 @@ class RlPlayer(BasePlayer):
             random_list = [i for i in range(InputHandler.output_size)]
             random.shuffle(random_list)
             return np.random.random_sample(InputHandler.output_size), np.array(random_list)
-        state = input_state.reshape((InputHandler.round_offset, 4, 1))
-        # state = np.expand_dims(input_state, axis=0)
-        state = np.expand_dims(state, axis=0)
+        state = np.expand_dims(input_state, axis=0)
         act_values = self.model.predict(state)
         return act_values, np.argsort(act_values[0])[::-1]
 
     def replay(self):
-        states = np.empty((0, InputHandler.input_size))
-        targets = np.empty((0, InputHandler.output_size))
+        # states = np.empty((0, InputHandler.input_size))
+        # targets = np.empty((0, InputHandler.output_size))
         for state, action, reward, next_state, done in self.get_batch():
             state = np.expand_dims(state, axis=0)
             next_state = np.expand_dims(next_state, axis=0)
@@ -98,30 +96,26 @@ class RlPlayer(BasePlayer):
 
         self.previous_memory = self.current_memory.copy()
         if done:
-            # print_state(self.previous_memory['state'])
+            #print_state(self.previous_memory['state'])
             self.remember(state=self.previous_memory['state'], action=self.previous_memory['action'],
                           reward=self.previous_memory['reward'], done=self.previous_memory['done'],
                           next_state=None)
+            self.input_handler.reset()
 
     def stich_over(self, stich=None):
         done = True if len(self.cards) == 0 else False
-        game_state = get_state_image(self.input_handler.state).reshape((InputHandler.round_offset, 4, 1))
-        self.current_memory['state'] = np.copy(game_state)
+        self.current_memory['state'] = np.copy(self.input_handler.state)
         self.current_memory['reward'] = self.calculate_reward(stich['teams'], done=done) + self.current_memory[
             'penalty']
         self.current_memory['done'] = done
         self.current_memory['used'] = True
         self.save_state(done=done)
-        self.input_handler.update_state_stich(stich=stich, cards=self.cards)
+        self.input_handler.update_state_stich_over(stich)
 
     def calculate_reward(self, teams, done):
         if not done:
             return 0.
-        points = []
-        points.append(teams[0][0].points)
-        points.append(teams[1][0].points)
-        points.append(teams[0][1].points)
-        points.append(teams[1][1].points)
+        points = [teams[0][0].points, teams[1][0].points, teams[0][1].points, teams[1][1].points]
         winner = max(points)
         winner_index = points.index(winner)
         self.winning[winner_index] += 1

@@ -5,13 +5,10 @@ from pyMiniJass.deck import Deck
 
 '''
 |                               played cards
-|    player 0     |    player 1      |    player 2     |    player 3      |  hand cards    |
-|-----------------|------------------|-----------------|------------------|----------------|
-|-----------------|------------------|-----------------|------------------|----------------|
-|-----------------|------------------|-----------------|------------------|----------------|
-|-----------------|------------------|-----------------|------------------|----------------|
+|    played       |    table         |   hand cards    |
+|-----------------|------------------|-----------------|
 
-5 * 16 * 4 = 320
+3 * 16 = 48
 '''
 
 
@@ -22,44 +19,39 @@ class InputHandler:
     nr_player = 4
     nr_rounds = 4
 
-    pos_player_played_card = [0, 1 * nr_cards, 2 * nr_cards, 3 * nr_cards]
-    pos_hand_cards = 4 * nr_cards
-    round_offset = 5 * nr_cards
+    pos_table = 1 * nr_cards
+    pos_hand_cards = 2 * nr_cards
 
-    input_size = 5 * nr_cards * 4
+    input_size = 3 * nr_cards
     output_size = nr_cards
 
     def __init__(self):
         self.state = None
-        self.round_counter = 0
         self.reset()
 
     def reset(self):
         self.state = np.zeros(self.input_size, dtype='float32')
 
-    def update_state_stich(self, stich, cards):
-        offset = self.round_offset * self.round_counter
-        self.set_played_cards(stich['played_cards'], offset=offset)
-        self.round_counter = (self.round_counter + 1) % 4
-
     def update_state_choose_card(self, table, cards):
-        offset = self.round_offset * self.round_counter
-        self.set_hand(cards, offset=offset)
-        self.set_played_cards(table, offset=offset)
+        self.set_hand(cards)
+        self.set_table(table)
 
-    def set_played_cards(self, table, offset):
+    def update_state_stich_over(self, stich):
+        self.set_table(stich['played_cards'])
+
+    def set_table(self, table):
+        for i in range(self.nr_cards):
+            if self.state[self.pos_table + i] == 1.:
+                self.state[i] = 1.
+        self.state[self.pos_table:self.pos_table + self.nr_cards] = 0.
         for played_card in table:
             card = played_card.card
-            player = played_card.player
-            self.state[offset + self.pos_player_played_card[player.id] + card_to_index(card)] = 1.
+            self.state[self.pos_table + card_to_index(card)] = 1.
 
-    def set_hand(self, cards, offset):
+    def set_hand(self, cards):
+        self.state[self.pos_hand_cards:self.pos_hand_cards + self.nr_cards] = 0.
         for card in cards:
-            self.state[offset + self.pos_hand_cards + card_to_index(card)] = 1.
-
-
-def get_state_image(input_state):
-    return np.reshape(input_state, (4, InputHandler.round_offset))
+            self.state[self.pos_hand_cards + card_to_index(card)] = 1.
 
 
 def card_to_index(card):
@@ -71,6 +63,7 @@ def index_to_card(index):
 
 
 def print_state(input_state):
-    y = get_state_image(input_state)
+    y = np.expand_dims(input_state, 0)
+    y = y.reshape(3, 16)
     plt.imshow(y, cmap='gray')
     plt.show()

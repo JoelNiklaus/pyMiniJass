@@ -10,9 +10,7 @@ from reinforcement.rl_player import RlPlayer
 
 def run(log_dir, episodes, rounds, save_plot):
     model_path_1 = log_dir + '/rl1_model_mini.h5'
-    # model_path_2 = log_dir + '/rl2_model_mini.h5'
     rl_player_1 = RlPlayer(name='RL1', model_path=model_path_1, rounds=rounds)
-    # rl_player_2 = RlPlayer(name='RL2', model_path=model_path_2, rounds=rounds)
     players = [rl_player_1, RandomPlayer(name='Tick'), RandomPlayer(name='track'), RandomPlayer(name='Track')]
     won1 = []
     won2 = []
@@ -21,15 +19,11 @@ def run(log_dir, episodes, rounds, save_plot):
             game = Game(players=players)
             game.play()
         rl_player_1.replay()
-        # rl_player_2.replay()
-        #print_stats(rl_player_1.winning, rl_player_1.lost)
         print_stats_winning(winning=rl_player_1.winning)
         won1.append(rl_player_1.won)
         won2.append(rl_player_1.lost)
         rl_player_1.reset_stats()
     rl_player_1.model.save_weights(model_path_1)
-    # rl_player_2.model.save_weights(model_path_2)
-    #plot_stats(won1, won2, save_plot, log_dir)
     # plot_loss(rl_player_1.loss, rl_player_2.loss, save_plot, log_dir)
 
 
