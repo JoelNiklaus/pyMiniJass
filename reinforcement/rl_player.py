@@ -17,7 +17,7 @@ class RlPlayer(BasePlayer):
     def __init__(self, name, model_path, rounds=1):
         super().__init__(name=name)
         self.input_handler = InputHandler()
-        self.n_samples = 20 * rounds
+        self.n_samples = 12 * rounds
         self.memories = deque([], maxlen=2 * self.n_samples)
         self.model = build_model(model_path=model_path)
         self.model_t = build_model(model_path=model_path)
