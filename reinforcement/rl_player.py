@@ -62,7 +62,7 @@ class RlPlayer(BasePlayer):
             # targets = np.vstack([targets, target_f])
             # history = self.model.fit(state, target_f, epochs=1, verbose=0, callbacks=self.callbacks)
         history = self.model.fit(states, targets, epochs=1, verbose=0, callbacks=self.callbacks)
-        self.loss += history.history['loss']
+        #self.loss += history.history['loss']
         # self.update_target()
 
     def update_target(self):
