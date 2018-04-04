@@ -47,23 +47,21 @@ class RlPlayer(BasePlayer):
         return act_values, np.argsort(act_values[0])[::-1]
 
     def replay(self):
-        states = np.empty((0, InputHandler.input_size))
-        targets = np.empty((0, InputHandler.output_size))
+        # states = np.empty((0, InputHandler.input_size))
+        # targets = np.empty((0, InputHandler.output_size))
         for state, action, reward, next_state, done in self.get_batch():
             state = np.expand_dims(state, axis=0)
             next_state = np.expand_dims(next_state, axis=0)
             target = reward
             if not done:
-                # target = reward + self.gamma * np.amax(self.model_t.predict(next_state)[0])
-                target = reward + self.gamma * np.amax(self.model.predict(next_state)[0])
+                target = reward + self.gamma * np.amax(self.model_t.predict(next_state)[0])
             target_f = self.model.predict(state)
             target_f[0][action] = target
             # states = np.vstack([states, state])
             # targets = np.vstack([targets, target_f])
-            # history = self.model.fit(state, target_f, epochs=1, verbose=0, callbacks=self.callbacks)
-        history = self.model.fit(states, targets, epochs=1, verbose=0, callbacks=self.callbacks)
-        #self.loss += history.history['loss']
-        # self.update_target()
+            history = self.model.fit(state, target_f, epochs=1, verbose=0, callbacks=self.callbacks)
+            self.loss += history.history['loss']
+        self.update_target()
 
     def update_target(self):
         weights = self.model.get_weights()
@@ -88,7 +86,7 @@ class RlPlayer(BasePlayer):
                 yield None
             else:
                 index += 1
-                # self.current_memory['penalty'] = -0.1
+                #self.current_memory['penalty'] = -0.1
                 # logger.info('not allowed card!')
 
     def save_state(self, done):
