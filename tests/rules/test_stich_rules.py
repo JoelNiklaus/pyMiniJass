@@ -1,6 +1,6 @@
 import pytest
 
-from pyMiniJass.deck import Card
+from pyMiniJass.card import Card
 from pyMiniJass.game import PlayedCard
 from pyMiniJass.player.random_player import RandomPlayer
 from pyMiniJass.suit import Suit

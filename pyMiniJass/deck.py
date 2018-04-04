@@ -1,8 +1,5 @@
-from collections import namedtuple
-
+from pyMiniJass.card import Card
 from pyMiniJass.suit import Suit
-
-Card = namedtuple('Card', ['value', 'suit'])
 
 
 class Deck:
