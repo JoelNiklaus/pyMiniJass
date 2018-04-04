@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 import os
 import sys, signal, argparse, logging
-from time import sleep
 
-from pyMiniJass.card import Card
 from pyMiniJass.game import Game
 from pyMiniJass.player.cli_player import CliPlayer
 from pyMiniJass.player.random_player import RandomPlayer
-from pyMiniJass.suit import Suit
 from reinforcement.rl_player import RlPlayer
 
 CURSOR_UP_ONE = '\x1b[1A'
@@ -37,10 +34,6 @@ def set_logging():
     root.addHandler(stream_handler)
 
 
-
-
-
-
 def handler(signum, frame):
     print('\n pyMiniJass terminated!  Goodbye!')
     sys.exit(0)
@@ -51,7 +44,4 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, handler)
     parser = argparse.ArgumentParser(description='CLI pyMiniJass', )
     args = parser.parse_args()
-
-    #sys.stdout.write(ERASE_LINE)
-    print(ascii_version_of_card([Card(value=1, suit=Suit.A), Card(value=1, suit=Suit.A)]))
     start_tournament()

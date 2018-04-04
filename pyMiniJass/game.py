@@ -5,6 +5,7 @@ from collections import namedtuple
 from pyMiniJass.dealer import Dealer
 from pyMiniJass.rules.stich_rules import stich_rule, card_allowed
 from pyMiniJass.rules.count_rules import count_stich
+from pyMiniJass.card import card_string
 
 PlayedCard = namedtuple('PlayedCard', ['player', 'card'])
 
@@ -39,15 +40,13 @@ class Game:
             self.stich_over(stich)
             self.stiche.append(stich)
             start_player_index = self.players.index(stich['stich'].player)
-        points_team1 = self.get_points_team1()
-        points_team2 = self.get_points_team2()
-        logger.info('Points Team 1: {0}'.format(points_team1))
-        logger.info('Points Team 2: {0}'.format(points_team2))
-        if points_team1 == points_team2:
-            logger.info('Remis!')
-        else:
-            team = '1' if points_team1 > points_team2 else '2'
-            logger.info('Team {0} won!'.format(team))
+            logger.info('\nStich:\n\n{0}'.format(card_string([stich['stich']])))
+        points = []
+        for player in self.players:
+            points.append(player.points)
+            logger.info('Points {0}: {1}'.format(player.name, player.points))
+        won_player_index = points.index(max(points))
+        logger.info('\nPlayer {0} won!'.format(self.players[won_player_index].name))
 
     def play_stich(self, start_player_index):
         first_card = self.play_card(first_card=None, player=self.players[start_player_index])
@@ -70,9 +69,9 @@ class Game:
             card = generator.send(is_allowed_card)
             chosen_card = chosen_card if card is None else card
         else:
-            logger.info('Table: {0}:{1}'.format(player, chosen_card))
             player.cards.remove(chosen_card)
         self.table.append(PlayedCard(player=player, card=chosen_card))
+        logger.info('\nTable:\n\n{0}'.format(card_string(self.table)))
         return chosen_card
 
     def stich_over(self, stich):

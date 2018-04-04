@@ -1,4 +1,6 @@
+from pyMiniJass.game import PlayedCard
 from pyMiniJass.player.base_player import BasePlayer
+from pyMiniJass.card import card_string
 
 
 class CliPlayer(BasePlayer):
@@ -16,16 +18,15 @@ class CliPlayer(BasePlayer):
                     return self.cards[card_index]
                 else:
                     print("Sorry, no valid card number\n")
-                    continue
             except ValueError:
                 print("Sorry, I didn't understand that.\n")
-                continue
 
     def _print_cards(self):
-        print('Hand cards: \n')
+        print('\nHand cards: \n')
+        cards = []
         for i, card in enumerate(self.cards):
-            print('{0} : {1}'.format(i, card))
-        print('')
+            cards.append(PlayedCard(player=BasePlayer(name=str(i)), card=card))
+        print(card_string(cards))
 
 
 def move_allowed(move_function, message):
