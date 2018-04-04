@@ -115,19 +115,17 @@ class RlPlayer(BasePlayer):
         self.input_handler.update_state_stich_over(stich)
 
     def calculate_reward(self, teams, done):
-        points = [teams[0][0].points, teams[1][0].points, teams[0][1].points, teams[1][1].points]
-        winner = max(points)
-        winner_index = points.index(winner)
-        self.winning[winner_index] += 1
+        if done:
+            points = [teams[0][0].points, teams[1][0].points, teams[0][1].points, teams[1][1].points]
+            winner = max(points)
+            winner_index = points.index(winner)
+            self.winning[winner_index] += 1
         gain = teams[0][0].points - self.previous_points
         self.previous_points = teams[0][0].points
         return self.normalize_points(gain)
 
     def reset_stats(self):
         self.winning = [0, 0, 0, 0]
-        # self.won = 0
-        # self.lost = 0
-        # self.remis = 0
 
     def normalize_points(self, points):
         return (points - 0) / (30 - 0)
