@@ -14,3 +14,36 @@ The round winning player is allowed to begin the new round.
 This leads in a total of four rounds.
 At the end of the game all cards are summed up with the value of the card.
 The the with the most points wins the game.
+
+## CLI
+The game provides a simple CLI to play against various players.
+
+```
+Table:
+
+Tick       Track      RL1        
+┌─────────┐┌─────────┐┌─────────┐
+│3        ││1        ││6        │
+│         ││         ││         │
+│         ││         ││         │
+│    B    ││    A    ││    B    │
+│         ││         ││         │
+│         ││         ││         │
+│       3 ││       1 ││       6 │
+└─────────┘└─────────┘└─────────┘
+
+Hand cards: 
+
+0          1          2          3          
+┌─────────┐┌─────────┐┌─────────┐┌─────────┐
+│8        ││6        ││7        ││8        │
+│         ││         ││         ││         │
+│         ││         ││         ││         │
+│    A    ││    A    ││    A    ││    B    │
+│         ││         ││         ││         │
+│         ││         ││         ││         │
+│       8 ││       6 ││       7 ││       8 │
+└─────────┘└─────────┘└─────────┘└─────────┘
+Please chose the card by the number from 0 to 3: 
+3
+```
