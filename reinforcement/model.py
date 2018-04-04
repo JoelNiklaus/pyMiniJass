@@ -11,8 +11,9 @@ def build_model(model_path, learning_rate=0.01):
     model = Sequential()
     model.add(Dense(2 * InputHandler.input_size, input_shape=(InputHandler.input_size,), activation='relu'))
     model.add(Dense(4 * InputHandler.input_size, activation='relu'))
+    model.add(Dense(3 * InputHandler.input_size, activation='relu'))
     model.add(Dense(2 * InputHandler.input_size, activation='relu'))
-    model.add(Dense(InputHandler.output_size))
+    model.add(Dense(InputHandler.output_size, activation='linear'))
     model.compile(loss='mse', optimizer=Adam(lr=learning_rate))
     load_model(model, model_path)
     return model
