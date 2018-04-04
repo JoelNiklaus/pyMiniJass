@@ -13,7 +13,7 @@ def build_model(model_path, learning_rate=0.01):
     model.add(Dense(InputHandler.input_size * 7, activation='relu'))
     model.add(Dense(InputHandler.input_size * 3, activation='relu'))
     model.add(Dense(InputHandler.output_size, activation='linear'))
-    model.compile(loss='mse', optimizer=Adam(lr=learning_rate))
+    model.compile(loss='mse', optimizer=Adam(lr=learning_rate, clipnorm=1.))
     load_model(model, model_path)
     return model
 
