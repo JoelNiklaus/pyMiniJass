@@ -4,15 +4,16 @@ import os
 import matplotlib.pyplot as plt
 
 from pyMiniJass.game import Game
-#from pyMiniJass.player.random_player import RandomPlayer
-from pyMiniJass.player.good_player import GoodPlayer
+from pyMiniJass.player.random_player import RandomPlayer
+#from pyMiniJass.player.good_player import GoodPlayer
 from reinforcement.rl_player import RlPlayer
 
 
 def run(log_dir, episodes, rounds, no_replay):
-    model_path_1 = log_dir + '/rl1_model_mini_negativ.h5'
-    rl_player_1 = RlPlayer(name='RL1', model_path=model_path_1, rounds=rounds)
-    players = [rl_player_1, GoodPlayer(name='Tick'), GoodPlayer(name='track'), GoodPlayer(name='Track')]
+    model_path = log_dir + '/rl1_model_mini_good_v1.h5'
+    rl_player_1 = RlPlayer(name='RL1', model_path=model_path, rounds=rounds)
+    #players = [rl_player_1, GoodPlayer(name='Tick'), GoodPlayer(name='track'), GoodPlayer(name='Track')]
+    players = [rl_player_1, RandomPlayer(name='Tick'), RandomPlayer(name='track'), RandomPlayer(name='Track')]
 
     won1 = []
     won2 = []
@@ -20,13 +21,14 @@ def run(log_dir, episodes, rounds, no_replay):
         for _ in range(rounds):
             game = Game(players=players)
             game.play()
-        rl_player_1.replay()
+        if not no_replay:
+            rl_player_1.replay()
         print_stats_winning(winning=rl_player_1.winning)
         won1.append(rl_player_1.won)
         won2.append(rl_player_1.lost)
-        if not no_replay:
-            rl_player_1.reset_stats()
-    rl_player_1.model.save_weights(model_path_1)
+        rl_player_1.reset_stats()
+    if not no_replay:
+        rl_player_1.model.save_weights(model_path)
 
 
 def print_stats(won_player_1, won_player_2):
