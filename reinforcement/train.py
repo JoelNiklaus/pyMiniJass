@@ -9,7 +9,7 @@ from pyMiniJass.player.good_player import GoodPlayer
 from reinforcement.rl_player import RlPlayer
 
 
-def run(log_dir, episodes, rounds, save_plot):
+def run(log_dir, episodes, rounds, no_replay):
     model_path_1 = log_dir + '/rl1_model_mini.h5'
     rl_player_1 = RlPlayer(name='RL1', model_path=model_path_1, rounds=rounds)
     players = [rl_player_1, GoodPlayer(name='Tick'), GoodPlayer(name='track'), GoodPlayer(name='Track')]
@@ -24,7 +24,8 @@ def run(log_dir, episodes, rounds, save_plot):
         print_stats_winning(winning=rl_player_1.winning)
         won1.append(rl_player_1.won)
         won2.append(rl_player_1.lost)
-        rl_player_1.reset_stats()
+        if not no_replay:
+            rl_player_1.reset_stats()
     rl_player_1.model.save_weights(model_path_1)
 
 
@@ -72,7 +73,8 @@ if __name__ == "__main__":
     parser.add_argument('-l', '--log_dir', dest='log_dir', help='Tensorboard log directory')
     parser.add_argument('-e', '--nr_episodes', dest='nr_episodes', help='Number of episodes to play', type=int)
     parser.add_argument('-r', '--rounds', dest='rounds', help='Game rounds', type=int)
+    parser.add_argument('-n', '--no-replay', dest='no_replay', help='Train RL player', action='store_true')
     parser.add_argument('-s', '--save_plot', dest='save_plot', help='Do not save the plots', action='store_false')
-    parser.set_defaults(log_dir=dir_path + '/weights', nr_episodes=10, rounds=20, save_plot=True)
+    parser.set_defaults(log_dir=dir_path + '/weights', nr_episodes=10, rounds=20, save_plot=True, no_replay=False)
     args = parser.parse_args()
-    run(log_dir=args.log_dir, episodes=args.nr_episodes, rounds=args.rounds, save_plot=args.save_plot)
+    run(log_dir=args.log_dir, episodes=args.nr_episodes, rounds=args.rounds, no_replay=args.no_replay)

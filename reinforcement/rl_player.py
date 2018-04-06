@@ -31,7 +31,7 @@ class RlPlayer(BasePlayer):
         self.remis = 0
         self.current_memory = dict(used=False)
         self.previous_memory = dict(used=False)
-        self.previous_points = 0
+        self.previous_points = [0, 0, 0, 0]
         self.winning = [0, 0, 0, 0]
 
     def remember(self, state, action, reward, next_state, done):
@@ -86,7 +86,7 @@ class RlPlayer(BasePlayer):
                 yield None
             else:
                 index += 1
-                #self.current_memory['penalty'] = -0.1
+                # self.current_memory['penalty'] = -0.1
                 # logger.info('not allowed card!')
 
     def save_state(self, done):
@@ -98,7 +98,7 @@ class RlPlayer(BasePlayer):
         self.previous_memory = self.current_memory.copy()
         if done:
             # print_state(self.previous_memory['state'])
-            self.previous_points = 0
+            self.previous_points = [0, 0, 0, 0]
             self.remember(state=self.previous_memory['state'], action=self.previous_memory['action'],
                           reward=self.previous_memory['reward'], done=self.previous_memory['done'],
                           next_state=None)
@@ -115,13 +115,19 @@ class RlPlayer(BasePlayer):
         self.input_handler.update_state_stich_over(stich)
 
     def calculate_reward(self, teams, done):
+        points = [teams[0][0].points, teams[1][0].points, teams[0][1].points, teams[1][1].points]
         if done:
-            points = [teams[0][0].points, teams[1][0].points, teams[0][1].points, teams[1][1].points]
             winner = max(points)
             winner_index = points.index(winner)
             self.winning[winner_index] += 1
-        gain = teams[0][0].points - self.previous_points
-        self.previous_points = teams[0][0].points
+        gain = points[0] - self.previous_points[0]
+        if gain == 0:
+            for i in range(1, 4):
+                lost = points[i] - self.previous_points[i]
+                if lost > 0:
+                    gain = -lost
+                    break
+        self.previous_points = points[:]
         return self.normalize_points(gain)
 
     def reset_stats(self):
