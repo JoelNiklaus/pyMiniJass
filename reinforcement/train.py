@@ -10,7 +10,7 @@ from reinforcement.rl_player import RlPlayer
 
 
 def run(log_dir, episodes, rounds, no_replay):
-    model_path_1 = log_dir + '/rl1_model_mini.h5'
+    model_path_1 = log_dir + '/rl1_model_mini_negativ.h5'
     rl_player_1 = RlPlayer(name='RL1', model_path=model_path_1, rounds=rounds)
     players = [rl_player_1, GoodPlayer(name='Tick'), GoodPlayer(name='track'), GoodPlayer(name='Track')]
 
