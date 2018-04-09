@@ -7,7 +7,7 @@ from keras.callbacks import ReduceLROnPlateau
 
 from pyMiniJass.game import get_team_points
 from pyMiniJass.player.base_player import BasePlayer
-from reinforcement.input_handler import InputHandler, index_to_card, print_state
+from reinforcement.input_handler import InputHandler, index_to_card, print_state, teammate_id, opponent_ids
 from reinforcement.model import build_model
 
 logger = logging.getLogger(__name__)
@@ -75,7 +75,7 @@ class RlPlayer(BasePlayer):
     def choose_card(self, table=None):
         self.current_memory['penalty'] = 0.
         allowed = False
-        self.input_handler.update_state_choose_card(table=table, cards=self.cards)
+        self.input_handler.update_state_choose_card(table=table, cards=self.cards, player_id=self.id)
         predictions, prediction_indexes = self.act(self.input_handler.state)
         index = 0
         while not allowed:
@@ -96,8 +96,8 @@ class RlPlayer(BasePlayer):
                           next_state=self.current_memory['state'])
 
         self.previous_memory = self.current_memory.copy()
+        print_state(self.previous_memory['state'])
         if done:
-            # print_state(self.previous_memory['state'])
             self.previous_points = [0, 0, 0, 0]
             self.remember(state=self.previous_memory['state'], action=self.previous_memory['action'],
                           reward=self.previous_memory['reward'], done=self.previous_memory['done'],
@@ -112,7 +112,7 @@ class RlPlayer(BasePlayer):
         self.current_memory['done'] = done
         self.current_memory['used'] = True
         self.save_state(done=done)
-        self.input_handler.update_state_stich_over(stich)
+        self.input_handler.update_state_stich_over(stich, self.id)
 
     def calculate_reward(self, teams, done):
         points = [teams[0][0].points, teams[1][0].points, teams[0][1].points, teams[1][1].points]
@@ -120,13 +120,11 @@ class RlPlayer(BasePlayer):
             winner = max(points)
             winner_index = points.index(winner)
             self.winning[winner_index] += 1
-        gain = points[0] - self.previous_points[0]
+        gain = points[self.id] - self.previous_points[self.id] + points[teammate_id(self.id)] - self.previous_points[
+            teammate_id(self.id)]
         if gain == 0:
-            for i in range(1, 4):
-                lost = points[i] - self.previous_points[i]
-                if lost > 0:
-                    gain = -lost
-                    break
+            a, b = opponent_ids(self.id)
+            gain = -(points[a] - self.previous_points[a] + points[b] - self.previous_points[b])
         self.previous_points = points[:]
         return self.normalize_points(gain)
 
