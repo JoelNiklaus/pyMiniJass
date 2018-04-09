@@ -15,7 +15,7 @@ from pyMiniJass.deck import Deck
 class InputHandler:
     deck = Deck()
 
-    nr_cards = 16
+    nr_cards = 24
     nr_player = 4
     nr_rounds = 4
 
@@ -81,6 +81,6 @@ def index_to_card(index):
 
 def print_state(input_state):
     y = np.expand_dims(input_state, 0)
-    y = y.reshape(4, 16)
+    y = y.reshape(4, InputHandler.nr_cards)
     plt.imshow(y, cmap='gray')
     plt.show()

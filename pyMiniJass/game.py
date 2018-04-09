@@ -33,7 +33,7 @@ class Game:
         dealer.deal_cards()
 
         start_player_index = random.randint(0, 3)
-        for i in range(4):
+        for i in range(6):
             logger.info('\nStich: {0} {1}\n'.format(i, '-' * 180))
             self.table = []
             stich = self.play_stich(start_player_index)

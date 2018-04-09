@@ -9,7 +9,7 @@ def test_game_random():
     game.play()
     points_team1 = sum(player.points for player in game.team1)
     points_team2 = sum(player.points for player in game.team2)
-    assert points_team1 + points_team2 == 72
+    assert points_team1 + points_team2 == 156
 
 
 def test_game_greedy():
@@ -18,4 +18,4 @@ def test_game_greedy():
     game.play()
     points_team1 = sum(player.points for player in game.team1)
     points_team2 = sum(player.points for player in game.team2)
-    assert points_team1 + points_team2 == 72
+    assert points_team1 + points_team2 == 156
