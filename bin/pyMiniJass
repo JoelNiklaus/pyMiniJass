@@ -11,7 +11,7 @@ from reinforcement.rl_player import RlPlayer
 def start_tournament():
     dir_path = os.path.dirname(os.path.realpath(__file__))
     parent_dir = os.path.abspath(os.path.join(dir_path, os.pardir))
-    model_path_1 = parent_dir + '/reinforcement/weights/rl1_model_mini_v2.h5'
+    model_path_1 = parent_dir + '/reinforcement/weights/rl1_model_mini_good_v1.h5'
     rl_player = RlPlayer(name='RL1', model_path=model_path_1)
     tick = RandomPlayer(name='Tick')
     track = RandomPlayer(name='Track')

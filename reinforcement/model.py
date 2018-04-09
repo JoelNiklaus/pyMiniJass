@@ -6,7 +6,7 @@ from keras.models import Sequential
 
 from reinforcement.input_handler import InputHandler
 
-
+'''
 def build_model(model_path, learning_rate=0.01):
     model = Sequential()
     model.add(Dense(InputHandler.input_size * 3, input_shape=(InputHandler.input_size,), activation='relu'))
@@ -15,6 +15,18 @@ def build_model(model_path, learning_rate=0.01):
     model.add(Dense(InputHandler.input_size * 3, activation='relu'))
     model.add(Dense(InputHandler.output_size, activation='linear'))
     model.compile(loss='mse', optimizer=Adam(lr=learning_rate, clipnorm=1.))
+    load_model(model, model_path)
+    return model
+'''
+
+
+def build_model(model_path, learning_rate=0.01):
+    model = Sequential()
+    model.add(Dense(InputHandler.input_size * 2, input_shape=(InputHandler.input_size,), activation='relu'))
+    model.add(Dense(InputHandler.input_size * 7, activation='relu'))
+    model.add(Dense(InputHandler.input_size * 3, activation='relu'))
+    model.add(Dense(InputHandler.output_size, activation='linear'))
+    model.compile(loss='mse', optimizer=Adam(lr=learning_rate))
     load_model(model, model_path)
     return model
 
