@@ -96,7 +96,7 @@ class RlPlayer(BasePlayer):
                           next_state=self.current_memory['state'])
 
         self.previous_memory = self.current_memory.copy()
-        print_state(self.previous_memory['state'])
+        #print_state(self.previous_memory['state'])
         if done:
             self.previous_points = [0, 0, 0, 0]
             self.remember(state=self.previous_memory['state'], action=self.previous_memory['action'],
