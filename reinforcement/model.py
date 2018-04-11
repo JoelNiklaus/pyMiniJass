@@ -24,10 +24,9 @@ def build_model(model_path, learning_rate=0.01):
 
 def build_model(model_path, learning_rate=0.01):
     if os.path.exists(model_path):
-        model = load_model('my_model.h5')
+        model = load_model(model_path)
         print('Load existing model.')
     else:
-
         model = Sequential()
         model.add(Dense(InputHandler.input_size * 6, input_shape=(InputHandler.input_size,), activation='relu'))
         model.add(Dense(InputHandler.input_size * 7, activation='relu'))
