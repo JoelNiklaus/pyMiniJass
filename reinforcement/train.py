@@ -31,8 +31,8 @@ def run(log_dir, episodes, rounds, no_replay):
         rl_player_1.reset_stats()
         rl_player_2.reset_stats()
     if not no_replay:
-        rl_player_1.model.save_weights(model_path_1)
-        rl_player_2.model.save_weights(model_path_2)
+        rl_player_1.model.save(model_path_1)
+        rl_player_2.model.save(model_path_2)
 
 
 def print_stats(won_player_1, won_player_2):

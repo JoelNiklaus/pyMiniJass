@@ -25,7 +25,7 @@ class RlPlayer(BasePlayer):
         self.epsilon = 0.95  # exploration rate
         self.penalty = 0.
         self.gamma = 0.95
-        self.callbacks = [ReduceLROnPlateau(monitor='loss', factor=0.2, patience=5, min_lr=0.001)]
+        # self.callbacks = [ReduceLROnPlateau(monitor='loss', factor=0.2, patience=5, min_lr=0.001)]
         self.won = 0
         self.lost = 0
         self.remis = 0
@@ -59,7 +59,7 @@ class RlPlayer(BasePlayer):
             target_f[0][action] = target
             # states = np.vstack([states, state])
             # targets = np.vstack([targets, target_f])
-            history = self.model.fit(state, target_f, epochs=1, verbose=0, callbacks=self.callbacks)
+            history = self.model.fit(state, target_f, epochs=1, verbose=0)  # callbacks=self.callbacks)
             self.loss += history.history['loss']
         self.update_target()
 
