@@ -96,7 +96,7 @@ class RlPlayer(BasePlayer):
                           next_state=self.current_memory['state'])
 
         self.previous_memory = self.current_memory.copy()
-        #print_state(self.previous_memory['state'])
+        # print_state(self.previous_memory['state'])
         if done:
             self.previous_points = [0, 0, 0, 0]
             self.remember(state=self.previous_memory['state'], action=self.previous_memory['action'],
@@ -131,5 +131,7 @@ class RlPlayer(BasePlayer):
     def reset_stats(self):
         self.winning = [0, 0, 0, 0]
 
+    max_points_per_round = 12 + 12 + 10 + 10
+
     def normalize_points(self, points):
-        return (points - 0) / (30 - 0)
+        return (points - 0) / (self.max_points_per_round - 0)

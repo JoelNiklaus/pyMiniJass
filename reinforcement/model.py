@@ -22,7 +22,7 @@ def build_model(model_path, learning_rate=0.01):
 
 def build_model(model_path, learning_rate=0.01):
     model = Sequential()
-    model.add(Dense(InputHandler.input_size * 6, input_shape=(InputHandler.input_size,), activation='relu'))
+    model.add(Dense(InputHandler.input_size * 2, input_shape=(InputHandler.input_size,), activation='relu'))
     model.add(Dense(InputHandler.input_size * 7, activation='relu'))
     model.add(Dense(InputHandler.input_size * 3, activation='relu'))
     model.add(Dense(InputHandler.output_size, activation='linear'))

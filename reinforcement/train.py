@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 from pyMiniJass.game import Game
 from pyMiniJass.player.random_player import RandomPlayer
-# from pyMiniJass.player.good_player import GoodPlayer
+from pyMiniJass.player.good_player import GoodPlayer
 from reinforcement.rl_player import RlPlayer
 
 
@@ -14,7 +14,7 @@ def run(log_dir, episodes, rounds, no_replay):
     model_path_2 = log_dir + '/rl1_model_mini_team_2.h5'
     rl_player_1 = RlPlayer(name='RL1', model_path=model_path_1, rounds=rounds)
     rl_player_2 = RlPlayer(name='RL2', model_path=model_path_2, rounds=rounds)
-    players = [rl_player_1, RandomPlayer(name='Tick'), rl_player_2, RandomPlayer(name='Track')]
+    players = [rl_player_1, GoodPlayer(name='Tick'), rl_player_2, GoodPlayer(name='Track')]
 
     won1 = []
     won2 = []
