@@ -44,9 +44,12 @@ def print_stats(won_player_1, won_player_2):
 
 
 def print_stats_winning(winning):
-    print('-' * 180)
+    text = ('-' * 180) + '\n'
     for i, win in enumerate(winning):
-        print("Player {0}: {1} ".format(i, win))
+        text += "Player {0}: {1} \n".format(i, win)
+    print(text)
+    with open('log.txt', 'a') as f:
+        print(text, file=f)
 
 
 def plot_loss(loss1, loss2, save_plot, log_dir):
