@@ -17,7 +17,8 @@ class RlPlayer(BasePlayer):
     def __init__(self, name, model_path, rounds=1):
         super().__init__(name=name)
         self.input_handler = InputHandler()
-        self.n_samples = 12 * rounds
+        self.number_of_hand_cards = 6
+        self.n_samples = 2 * rounds * 6
         self.memories = deque([], maxlen=2 * self.n_samples)
         self.model = build_model(model_path=model_path)
         self.model_t = build_model(model_path=model_path)
@@ -47,20 +48,24 @@ class RlPlayer(BasePlayer):
         return act_values, np.argsort(act_values[0])[::-1]
 
     def replay(self):
-        # states = np.empty((0, InputHandler.input_size))
-        # targets = np.empty((0, InputHandler.output_size))
-        for state, action, reward, next_state, done in self.get_batch():
-            state = np.expand_dims(state, axis=0)
-            next_state = np.expand_dims(next_state, axis=0)
-            target = reward
-            if not done:
-                target = reward + self.gamma * np.amax(self.model_t.predict(next_state)[0])
-            target_f = self.model.predict(state)
-            target_f[0][action] = target
-            # states = np.vstack([states, state])
-            # targets = np.vstack([targets, target_f])
-            history = self.model.fit(state, target_f, epochs=1, verbose=0)  # callbacks=self.callbacks)
+        for turn in self.get_batch():
+            states_v = np.empty((0, InputHandler.input_size))
+            targets_v = np.empty((0, InputHandler.output_size))
+            predictions = [self.model_t.predict(np.expand_dims(i[0], axis=0)) for i in turn]
+            rewards = [i[2] for i in turn]
+            actions = [i[1] for i in turn]
+            states = [i[0] for i in turn]
+            for i in range(len(turn)):
+                target = rewards[i]
+                for y in range(i + 1, len(turn)):
+                    target += self.gamma * np.amax(predictions[y][0])
+                target_f = predictions[i]
+                target_f[0][actions[i]] = target
+                states_v = np.vstack([states_v, states[i]])
+                targets_v = np.vstack([targets_v, target_f])
+            history = self.model.fit(states_v, targets_v, epochs=1, verbose=0)  # callbacks=self.callbacks)
             self.loss += history.history['loss']
+
         self.update_target()
 
     def update_target(self):
@@ -68,8 +73,16 @@ class RlPlayer(BasePlayer):
         self.model_t.set_weights(weights)
 
     def get_batch(self):
-        n_samples = min(self.n_samples, len(self.memories))
-        samples = random.sample(self.memories, n_samples)
+        n_samples = int(min(self.n_samples, len(self.memories)) / self.number_of_hand_cards)
+        sample_indices = np.random.randint(n_samples, size=self.n_samples)
+        samples = []
+        for i in sample_indices:
+            index = self.number_of_hand_cards * i
+            turn = []
+            for i in range(self.number_of_hand_cards):
+                sample = self.memories[index + i]
+                turn.append(sample)
+            samples.append(turn)
         return samples
 
     def choose_card(self, table=None):
@@ -120,6 +133,7 @@ class RlPlayer(BasePlayer):
             winner = max(points)
             winner_index = points.index(winner)
             self.winning[winner_index] += 1
+            return 2.0 if winner_index in [0, 2] else -2.
         gain = points[self.id] - self.previous_points[self.id] + points[teammate_id(self.id)] - self.previous_points[
             teammate_id(self.id)]
         if gain == 0:

@@ -9,6 +9,9 @@ __pycache__/
 # Model weight files
 *.h5
 
+# Logfile
+log.txt
+
 # Distribution / packaging
 .Python
 env/
