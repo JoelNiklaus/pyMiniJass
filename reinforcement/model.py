@@ -1,7 +1,7 @@
 import os
 import os.path
 
-from keras.layers import Dense, Conv2D, Flatten
+from keras.layers import Dense, Conv2D, Flatten, Dropout
 from keras.optimizers import Adam, SGD, RMSprop
 from keras.models import Sequential
 from keras.models import load_model
@@ -30,7 +30,8 @@ def build_model(model_path, learning_rate=0.01):
         model = Sequential()
         model.add(Dense(InputHandler.input_size * 6, input_shape=(InputHandler.input_size,), activation='relu'))
         model.add(Dense(InputHandler.input_size * 7, activation='relu'))
+        model.add(Dropout(0.5))
         model.add(Dense(InputHandler.input_size * 3, activation='relu'))
         model.add(Dense(InputHandler.output_size, activation='linear'))
-        model.compile(loss='mse', optimizer=RMSprop(lr=learning_rate, clipvalue=1.0))
+        model.compile(loss='mse', optimizer=Adam(lr=learning_rate, clipvalue=1.0))
     return model

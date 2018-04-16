@@ -27,7 +27,7 @@ class RlPlayer(BasePlayer):
         self.epsilon = 0.95  # exploration rate
         self.penalty = 0.
         self.gamma = 0.95
-        # self.callbacks = [ReduceLROnPlateau(monitor='loss', factor=0.2, patience=5, min_lr=0.001)]
+        self.callbacks = [ReduceLROnPlateau(monitor='loss', factor=0.2, patience=5, min_lr=0.001)]
         self.won = 0
         self.lost = 0
         self.remis = 0
