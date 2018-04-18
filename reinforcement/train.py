@@ -18,8 +18,6 @@ def run(log_dir, episodes, rounds, no_replay):
     # players = [rl_player_1, RandomPlayer(name='Tick'), rl_player_2, RandomPlayer(name='Track')]
     players = [rl_player_1, GoodPlayer(name='Tick'), GoodPlayer(name='Trick'), GoodPlayer(name='Track')]
 
-    won1 = []
-    won2 = []
     for e in range(episodes):
         for _ in range(rounds):
             game = Game(players=players)
@@ -28,8 +26,6 @@ def run(log_dir, episodes, rounds, no_replay):
             rl_player_1.replay()
             # rl_player_2.replay()
         print_stats_winning(winning=rl_player_1.winning)
-        won1.append(rl_player_1.won)
-        won2.append(rl_player_1.lost)
         rl_player_1.reset_stats()
         # rl_player_2.reset_stats()
     if not no_replay:
@@ -49,6 +45,8 @@ def print_stats_winning(winning):
     text = ('-' * 180) + '\n'
     for i, win in enumerate(winning):
         text += "Player {0}: {1} \n".format(i, win)
+    text += "Team 1: {0}\n".format(winning[0] + winning[2])
+    text += "Team 2: {0}\n".format(winning[1] + winning[3])
     print(text)
     with open('log.txt', 'a') as f:
         print(text, file=f)
