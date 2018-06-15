@@ -105,15 +105,15 @@ class RlPlayer(BasePlayer):
                           next_state=None)
             self.input_handler.reset()
 
-    def stich_over(self, stich=None):
+    def round_over(self, round=None):
         done = True if len(self.cards) == 0 else False
         self.current_memory['state'] = np.copy(self.input_handler.state)
-        self.current_memory['reward'] = self.calculate_reward(stich['teams'], done=done) + self.current_memory[
+        self.current_memory['reward'] = self.calculate_reward(round['teams'], done=done) + self.current_memory[
             'penalty']
         self.current_memory['done'] = done
         self.current_memory['used'] = True
         self.save_state(done=done)
-        self.input_handler.update_state_stich_over(stich, self.id)
+        self.input_handler.update_state_stich_over(round, self.id)
 
     def calculate_reward(self, teams, done):
         points = [teams[0][0].points, teams[1][0].points, teams[0][1].points, teams[1][1].points]

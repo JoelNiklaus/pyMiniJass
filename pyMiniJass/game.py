@@ -76,7 +76,7 @@ class Game:
 
     def stich_over(self, stich):
         for player in self.players:
-            player.stich_over(stich=stich)
+            player.round_over(round=stich)
 
     def get_points_team1(self):
         return get_team_points(self.team1)

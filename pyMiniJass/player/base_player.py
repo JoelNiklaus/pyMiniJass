@@ -19,7 +19,7 @@ class BasePlayer:
     def choose_card(self, table=None):
         raise NotImplementedError(str(inspect.stack()[1][3]))
 
-    def stich_over(self, stich=None):
+    def round_over(self, round=None):
         pass
 
     def allowed_cards(self, first_card):

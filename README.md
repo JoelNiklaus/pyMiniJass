@@ -2,18 +2,28 @@
 pyMiniJass is a minified version of the Schieber Jass game
 
 ## Game description
-The game consists of 16 cards with two types A and B.
-Hence there are cards from 1 to 8 of the type A and the same for type B.
-The pyMiniJass consists of four players building two teams.
-At the beginning every player gets randomly four cards.
-Now randomly one player starts and can choose a card.
-The next player has to play a card of the same type if he is able to do so.
-When every player has played a card the highest card of the same type as the starting card has wins the round
-and gets all the cards. (They are stack next to him and are out of the game)
-The round winning player is allowed to begin the new round. 
-This leads in a total of four rounds.
-At the end of the game all cards are summed up with the value of the card.
-The the with the most points wins the game.
+
+### Structure
+The pyMiniJass is structured as the follows:
+ - item Two types of cards, named as A and B
+ - item 8 cards per type, resulting in a total of 16
+ - item Four players, two of them building a team
+ - item A game has four rounds
+ - item The highest card with the same type of the starting card wins the round
+
+### Gameplay
+First the four players have to build two teams of two members each.
+In the perspective of every player the order of card choosing is defined as the following.
+If you start the round the next player is your first opponent, after that your teammate has to choose and finally your second opponent play the last card of the round.
+At the beginning of the game every player gets randomly four cards.
+After the card dealing phase a random player starts to choose a card.
+Now each player after another has to choose a card of his own ones.
+If available, the card chosen card has to be of the same type as the first of the round.
+When every player has played a card the highest card of the same type as the starting card wins the round.
+The team of the winning player gets as many points as the values of the cards have.
+The next round starts with the winner of the last one.
+This procedure is repeated until no cards are left, leading to a total of four rounds.
+At the end of the game the team with the most points wins.
 
 ## CLI
 The game provides a simple CLI to play against various players.

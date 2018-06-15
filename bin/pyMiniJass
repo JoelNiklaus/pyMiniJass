@@ -19,8 +19,9 @@ def start_tournament():
     #rl_player_2 = RlPlayer(name='RL2', model_path=model_path_2)
     track = GoodPlayer(name='Track')
     trick = GoodPlayer(name='Trick')
+    track = GoodPlayer(name='Track')
     cli_player = CliPlayer(name='Yourself')
-    players = [rl_player_1, cli_player, trick, track]
+    players = [track, cli_player, trick, track]
     game = Game(players=players)
     game.play()
 
@@ -46,3 +47,5 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='CLI pyMiniJass', )
     args = parser.parse_args()
     start_tournament()
+
+
